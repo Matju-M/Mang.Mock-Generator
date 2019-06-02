@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist",
+		"strict": true,
+		"declaration": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"resolveJsonModule": true,
+		"noImplicitAny": false,
+		"importHelpers": true,
+		"target": "es2015",
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"incremental": true,
+		"skipLibCheck": true,
+		"lib": [
+			"es2015",
+			"dom"
+		],
+	},
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"**/*.d.ts"
+	]
+}

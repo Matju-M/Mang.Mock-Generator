@@ -1,0 +1,40 @@
+{
+  "name": "@mang/mock-generator",
+  "version": "0.1.0",
+  "description": "Mock Generator from Typescript Interfaces",
+  "main": "./dist/index.js",
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "ts-morph": "^2.3.0",
+    "typescript": "^3.5.1"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.133"
+  },
+  "scripts": {
+    "compile": "tsc && node ./dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Matju-M/Mang.Mock-Generator.git"
+  },
+  "keywords": [
+    "mock",
+    "generator",
+    "typescript",
+    "interface"
+  ],
+  "author": "Matthew Mangion <matthew.mangion@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Matju-M/Mang.Mock-Generator/issues"
+  },
+  "homepage": "https://github.com/Matju-M/Mang.Mock-Generator#readme",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md"
+  ]
+}

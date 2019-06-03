@@ -30,12 +30,22 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 			includeAllChildren = true;
 		}
 
-		const isPrimitive = !!getPrimitiveDefaultValue(prop.getType());
+		const isPrimitive = isPrimitiveType(prop.getType());
+		const propType = prop.getType().getNonNullableType();
 
-		if (prop.getType().getNonNullableType().isArray() && !isPrimitive) {
+		if (propType.isEnum()) {
+			const sanitizedEnumInterface = propType.getText().split(").");
+			const enumInterface = sourceFile.getEnum(sanitizedEnumInterface.pop() || "");
+			if (enumInterface) {
+				const enumMember = enumInterface.getMembers()[0]; // Get First Member;
+				skeleton[prop.getName()] = enumMember.getText();
+			} else {
+				console.error(`[ERROR]: Enum Interface ${propType.getText()} not found!`);
+			}
+		} else if (propType.isArray() && !isPrimitive) {
 			const tempSkeleton = [{}];
 			builder(
-				prop.getType().getNonNullableType().getText().replace("[]", ""),
+				propType.getText().replace("[]", ""),
 				sourceFile,
 				tempSkeleton[0],
 				includeAllChildren || hasOptionalParent
@@ -44,10 +54,10 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 			if (!isEmpty(tempSkeleton[0])) {
 				skeleton[prop.getName()] = tempSkeleton;
 			}
-		} else if (prop.getType().getNonNullableType().isObject() && !isPrimitive) {
+		} else if (propType.isObject() && !isPrimitive) {
 			const tempSkeleton = {};
 			builder(
-				prop.getType().getNonNullableType().getText().replace("[]", ""),
+				propType.getText().replace("[]", ""),
 				sourceFile,
 				tempSkeleton,
 				includeAllChildren || hasOptionalParent
@@ -56,12 +66,18 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 				skeleton[prop.getName()] = tempSkeleton;
 			}
 		} else if (prop.hasQuestionToken() || hasOptionalParent) {
-			skeleton[prop.getName()] = getPrimitiveDefaultValue(prop.getType().getNonNullableType());
+			skeleton[prop.getName()] = getPrimitiveDefaultValue(propType);
 		}
 	});
 	return skeleton;
 }
 
+function isPrimitiveType(type: Type): boolean {
+	const t = type.getText();
+	return ["string[]", "string", "number[]", "number", "boolean", "boolean[]"].indexOf(t) > -1;
+}
+
+// FIXME: this needs to be exposed so that user can add their own defaults (maybe fallback to this)
 function getPrimitiveDefaultValue(type: Type) {
 	const t = type.getText();
 	if (t.indexOf("string[]") > -1) {

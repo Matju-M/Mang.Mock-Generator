@@ -1,11 +1,12 @@
 import { forEach, isEmpty } from "lodash";
 import { SourceFile, ExpressionWithTypeArguments, Type } from "ts-morph";
 
-export function build<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T): T {
-	return builder(interfaceName, sourceFile, skeleton);
+export function build<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, includeAll: boolean): T {
+	return builder(interfaceName, sourceFile, skeleton, includeAll);
 }
 
-function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, hasOptionalParent?: boolean): T {
+function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, includeAll: boolean, hasOptionalParent?: boolean): T {
+		
 	const sanitizedInterfaceName = interfaceName.split(").");
 	const interfaceDeclaration = sourceFile.getInterface(sanitizedInterfaceName.pop() || "");
 
@@ -25,8 +26,10 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 	}
 
 	props.forEach(prop => {
+		const addProp = includeAll || prop.hasQuestionToken();
+
 		let includeAllChildren: boolean | undefined;
-		if (hasOptionalParent === undefined && prop.hasQuestionToken()) {
+		if (hasOptionalParent === undefined && addProp) {
 			includeAllChildren = true;
 		}
 
@@ -48,6 +51,7 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 				propType.getText().replace("[]", ""),
 				sourceFile,
 				tempSkeleton[0],
+				includeAll,
 				includeAllChildren || hasOptionalParent
 			);
 
@@ -60,12 +64,13 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 				propType.getText().replace("[]", ""),
 				sourceFile,
 				tempSkeleton,
+				includeAll,
 				includeAllChildren || hasOptionalParent
 			);
 			if (!isEmpty(tempSkeleton)) {
 				skeleton[prop.getName()] = tempSkeleton;
 			}
-		} else if (prop.hasQuestionToken() || hasOptionalParent) {
+		} else if (addProp || hasOptionalParent) {
 			skeleton[prop.getName()] = getPrimitiveDefaultValue(propType);
 		}
 	});

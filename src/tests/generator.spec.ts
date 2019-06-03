@@ -1,6 +1,5 @@
 import { Generator } from "../generator";
 
-// let sourceFile: SourceFile;
 let generator: Generator;
 
 beforeAll(() => {
@@ -11,7 +10,7 @@ beforeEach(() => {
 	expect(generator).not.toBeUndefined();
 });
 
-test("Hero", () => {
+test("Hero {includeAllProps = false}", () => {
 	const data = generator.generate("test.model.ts", "Hero");
 	expect(data).not.toBeUndefined();
 	const expected = {
@@ -19,6 +18,20 @@ test("Hero", () => {
 		heroTypeIds: [-1],
 		countryId: -1
 	};
+	expect(data).toEqual(expected);
+});
+
+test("Hero {includeAllProps = true}", () => {
+	const data = generator.generate("test.model.ts", "Hero", true);
+	expect(data).not.toBeUndefined();
+	const expected = {
+		"id": -1,
+		"name": "[MOCK]",
+		"code": "[MOCK]",
+		"sortOrder": -1,
+		"heroTypeIds": [-1],
+		"countryId": -1
+	}
 	expect(data).toEqual(expected);
 });
 

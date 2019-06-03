@@ -14,14 +14,20 @@ export class Generator {
 		console.log("Initialized with ts version", ts.version);
 	}
 
-	generate(sourceFileName: string, interfaceName: string): object {
+	/**
+	 * 
+	 * @param sourceFileName Source file name ex: test.model.ts
+	 * @param interfaceName Interface name ex: Hero
+	 * @param includeAllProps Include all Interface Properties. defaults to false.
+	 */
+	generate(sourceFileName: string, interfaceName: string, includeAllProps: boolean = false): object {
 		const sourceFile = this.project.getSourceFileOrThrow(sourceFileName);
 		let props = {};
 
 		if (sourceFile) {
-			props = build(interfaceName, sourceFile, props);
+			props = build(interfaceName, sourceFile, props, includeAllProps);
 		} else {
-			console.log("No Source file found");
+			throw Error("[ERROR]: No Source file found");
 		}
 
 		return props;

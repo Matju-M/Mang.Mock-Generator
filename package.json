@@ -1,5 +1,5 @@
 {
-  "name": "@mang/mock-generator",
+  "name": "@mangm/mock-generator",
   "version": "0.1.0",
   "description": "Mock Generator from Typescript Interfaces",
   "main": "./dist/index.js",

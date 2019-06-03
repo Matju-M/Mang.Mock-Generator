@@ -9,11 +9,14 @@
     "typescript": "^3.5.1"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.133"
+    "@types/jest": "^24.0.13",
+    "@types/lodash": "^4.14.133",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2"
   },
   "scripts": {
     "compile": "tsc && node ./dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",

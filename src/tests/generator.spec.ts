@@ -1,18 +1,18 @@
-import { Project, SourceFile } from "ts-morph";
-import { build } from "..";
+import { Generator } from "../generator";
 
-let sourceFile: SourceFile;
+// let sourceFile: SourceFile;
+let generator: Generator;
+
 beforeAll(() => {
-	const project = new Project();
-	sourceFile = project.addExistingSourceFile("./src/tests/test.model.ts");
+	generator = new Generator("./tsconfig.json");
 })
 
 beforeEach(() => {
-	expect(sourceFile).not.toBeUndefined();
+	expect(generator).not.toBeUndefined();
 });
 
 test("Hero", () => {
-	const data = build("Hero", sourceFile, {});
+	const data = generator.generate("test.model.ts", "Hero");
 	expect(data).not.toBeUndefined();
 	const expected = {
 		sortOrder: -1,
@@ -23,7 +23,7 @@ test("Hero", () => {
 });
 
 test("HeroTypesMenu", () => {
-	const data = build("HeroTypesMenu", sourceFile, {});
+	const data = generator.generate("test.model.ts", "HeroTypesMenu");
 	expect(data).not.toBeUndefined();
 	const expected = {
 		"heroTypes": [{
@@ -45,7 +45,7 @@ test("HeroTypesMenu", () => {
 });
 
 test("Bricks", () => {
-	const data = build("Bricks", sourceFile, {});
+	const data = generator.generate("test.model.ts", "Bricks");
 	expect(data).not.toBeUndefined();
 	const expected = {
 		material:

@@ -2,7 +2,8 @@
   "name": "@mangm/mock-generator",
   "version": "0.1.0",
   "description": "Mock Generator from Typescript Interfaces",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "dependencies": {
     "lodash": "^4.17.11",
     "ts-morph": "^2.3.0",
@@ -37,6 +38,7 @@
   "homepage": "https://github.com/Matju-M/Mang.Mock-Generator#readme",
   "files": [
     "dist/*.js",
+    "dist/*.d.ts",
     "package.json",
     "README.md",
     "CHANGELOG.md"

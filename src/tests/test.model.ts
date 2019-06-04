@@ -67,3 +67,9 @@ export interface LocalitiesMenu {
 	heroName: string;
 	heroType: string;
 }
+
+export interface HeroRecursive {
+	alt: string;
+	heros?: HeroRecursive[],
+	name: string;
+}

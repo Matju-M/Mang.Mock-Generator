@@ -10,6 +10,37 @@ beforeEach(() => {
 	expect(generator).not.toBeUndefined();
 });
 
+test("HeroRecursive", () => {
+	const data = generator.generate("test.model.ts", "HeroRecursive");
+	expect(data).not.toBeUndefined();
+	const expectedData = {
+		"heros": [{
+			"alt": "[MOCK]",
+			"name": "[MOCK]"
+		}]
+	};
+	expect(data).toEqual(expectedData);
+});
+
+test("HeroRecursive { maxRecursiveLoop: 2}", () => {
+	const data = generator.generate("test.model.ts", "HeroRecursive", { maxRecursiveLoop: 2 });
+	expect(data).not.toBeUndefined();
+	const expectedData = {
+		"heros": [
+			{
+				"alt": "[MOCK]",
+				"heros": [
+					{
+						"alt": "[MOCK]",
+						"name": "[MOCK]"
+					}
+				], "name": "[MOCK]"
+			}
+		]
+	};
+	expect(data).toEqual(expectedData);
+});
+
 test("Hero {includeAllProps = false}", () => {
 	const data = generator.generate("test.model.ts", "Hero");
 	expect(data).not.toBeUndefined();
@@ -22,7 +53,7 @@ test("Hero {includeAllProps = false}", () => {
 });
 
 test("Hero {includeAllProps = true}", () => {
-	const data = generator.generate("test.model.ts", "Hero", true);
+	const data = generator.generate("test.model.ts", "Hero", { includeAllProps: true });
 	expect(data).not.toBeUndefined();
 	const expected = {
 		"id": -1,
@@ -35,53 +66,53 @@ test("Hero {includeAllProps = true}", () => {
 	expect(data).toEqual(expected);
 });
 
-test("HeroTypesMenu", () => {
-	const data = generator.generate("test.model.ts", "HeroTypesMenu");
-	expect(data).not.toBeUndefined();
-	const expected = {
-		"heroTypes": [{
-			"continents": [{
-				"countries": [{
-					"localities": [{
-						"id": -1,
-						"heroName": "[MOCK]",
-						"heroType": "[MOCK]"
-					}],
-					"id": -1,
-					"name": "[MOCK]"
-				}]
-			}]
-		}]
-	}
+// test("HeroTypesMenu", () => {
+// 	const data = generator.generate("test.model.ts", "HeroTypesMenu");
+// 	expect(data).not.toBeUndefined();
+// 	const expected = {
+// 		"heroTypes": [{
+// 			"continents": [{
+// 				"countries": [{
+// 					"localities": [{
+// 						"id": -1,
+// 						"heroName": "[MOCK]",
+// 						"heroType": "[MOCK]"
+// 					}],
+// 					"id": -1,
+// 					"name": "[MOCK]"
+// 				}]
+// 			}]
+// 		}]
+// 	}
 
-	expect(data).toEqual(expected);
-});
+// 	expect(data).toEqual(expected);
+// });
 
-test("Bricks", () => {
-	const data = generator.generate("test.model.ts", "Bricks");
-	expect(data).not.toBeUndefined();
-	const expected = {
-		material:
-		{
-			name: '[MOCK]',
-			location: {
-				name: '[MOCK]',
-				iso: '[MOCK]'
-			}
-		},
-		details: [
-			{
-				concreteClass: "C5",
-				code: '[MOCK]',
-				alternatives: [
-					{
-						name: "[MOCK]",
-						iso: "[MOCK]"
-					}
-				]
-			}
-		],
-		optional: '[MOCK]'
-	};
-	expect(data).toEqual(expected);
-});
+// test("Bricks", () => {
+// 	const data = generator.generate("test.model.ts", "Bricks");
+// 	expect(data).not.toBeUndefined();
+// 	const expected = {
+// 		material:
+// 		{
+// 			name: '[MOCK]',
+// 			location: {
+// 				name: '[MOCK]',
+// 				iso: '[MOCK]'
+// 			}
+// 		},
+// 		details: [
+// 			{
+// 				concreteClass: "C5",
+// 				code: '[MOCK]',
+// 				alternatives: [
+// 					{
+// 						name: "[MOCK]",
+// 						iso: "[MOCK]"
+// 					}
+// 				]
+// 			}
+// 		],
+// 		optional: '[MOCK]'
+// 	};
+// 	expect(data).toEqual(expected);
+// });

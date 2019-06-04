@@ -1,14 +1,16 @@
 import { forEach, isEmpty } from "lodash";
 import { SourceFile, ExpressionWithTypeArguments, Type } from "ts-morph";
 
-export function build<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, includeAll: boolean): T {
-	return builder(interfaceName, sourceFile, skeleton, includeAll);
+import { Configuration } from './generator.config';
+
+export function build<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, config: Configuration): T {
+	return builder(interfaceName, sourceFile, skeleton, config, {});
 }
 
-function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, includeAll: boolean, hasOptionalParent?: boolean): T {
-		
-	const sanitizedInterfaceName = interfaceName.split(").");
-	const interfaceDeclaration = sourceFile.getInterface(sanitizedInterfaceName.pop() || "");
+function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, config: Configuration, recursions: object, hasOptionalParent?: boolean): T {
+
+	const sanitizedInterfaceName = interfaceName.split(").").pop() || "";
+	const interfaceDeclaration = sourceFile.getInterface(sanitizedInterfaceName);
 
 	if (!interfaceDeclaration) {
 		return skeleton;
@@ -26,7 +28,7 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 	}
 
 	props.forEach(prop => {
-		const addProp = includeAll || prop.hasQuestionToken();
+		const addProp = config.includeAllProps || prop.hasQuestionToken();
 
 		let includeAllChildren: boolean | undefined;
 		if (hasOptionalParent === undefined && addProp) {
@@ -35,7 +37,21 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 
 		const propType = prop.getType().getNonNullableType();
 		const isPrimitive = isPrimitiveType(propType);
+		// let stopRecursion = false;
 
+		const sanitizedPropType = sanitizePropType(propType);
+		if (sanitizedInterfaceName === sanitizedPropType) {
+			recursions[sanitizedPropType] = recursions[sanitizedPropType] ? recursions[sanitizedPropType] + 1 : 1;
+			if (recursions[sanitizedPropType] > config.maxRecursiveLoop!) {
+				console.warn(`[WARNING]: Stopping recursing exceeding maxRecursiveLoop for key: ${sanitizedPropType}`);
+				return;
+			}
+		}
+
+		// if (stopRecursion) {
+		// 	console.warn(`[WARNING]: Stopping recursing exceeding maxRecursiveLoop for key: ${sanitizedPropType}`);
+		// 	stopRecursion = false;
+		// } else 
 		if (propType.isEnum()) {
 			const sanitizedEnumInterface = propType.getText().split(").");
 			const enumInterface = sourceFile.getEnum(sanitizedEnumInterface.pop() || "");
@@ -48,10 +64,11 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 		} else if (propType.isArray() && !isPrimitive) {
 			const tempSkeleton = [{}];
 			builder(
-				propType.getText().replace("[]", ""),
+				sanitizedPropType,
 				sourceFile,
 				tempSkeleton[0],
-				includeAll,
+				config,
+				recursions,
 				includeAllChildren || hasOptionalParent
 			);
 
@@ -61,10 +78,11 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 		} else if (propType.isObject() && !isPrimitive) {
 			const tempSkeleton = {};
 			builder(
-				propType.getText().replace("[]", ""),
+				sanitizedPropType,
 				sourceFile,
 				tempSkeleton,
-				includeAll,
+				config,
+				recursions,
 				includeAllChildren || hasOptionalParent
 			);
 			if (!isEmpty(tempSkeleton)) {
@@ -75,6 +93,10 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 		}
 	});
 	return skeleton;
+}
+
+function sanitizePropType(type: Type): string {
+	return (type.getText().split(").").pop() || "").replace("[]", "");
 }
 
 function isPrimitiveType(type: Type): boolean {

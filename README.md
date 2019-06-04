@@ -9,10 +9,14 @@ This library generates mock data from Typescript interfaces.
 
 
 ```js
-import { Generator } from "@mangm/ts-mock-generator";
+import { Generator, Configuration } from "@mangm/ts-mock-generator";
 
 const generator = new Generator("./tsconfig.json");
-const data = generator.generate("test.model.ts", "Hero", true);
+const config: Configuration = {
+	includeAllProps: true, // this will include only optional data: defaults to false
+	maxRecursiveLoop: 2 // this will create only one recursive iteration if parent and child have the same interface: defaults to 1
+};
+const data = generator.generate("test.model.ts", "Hero",  config);
 	
 ```
 

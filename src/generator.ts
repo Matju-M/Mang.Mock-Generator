@@ -1,6 +1,7 @@
 import { Project, ts } from "ts-morph";
 
 import { build } from "./build";
+import { DEFAULT_CONFIGURATION, Configuration } from './generator.config';
 
 export class Generator {
 
@@ -20,12 +21,13 @@ export class Generator {
 	 * @param interfaceName Interface name ex: Hero
 	 * @param includeAllProps Include all Interface Properties. defaults to false.
 	 */
-	generate(sourceFileName: string, interfaceName: string, includeAllProps: boolean = false): object {
+	generate(sourceFileName: string, interfaceName: string, config?: Configuration): object {
+		const configuration = { ...DEFAULT_CONFIGURATION, ...config };
 		const sourceFile = this.project.getSourceFileOrThrow(sourceFileName);
 		let props = {};
 
 		if (sourceFile) {
-			props = build(interfaceName, sourceFile, props, includeAllProps);
+			props = build(interfaceName, sourceFile, props, configuration);
 		} else {
 			throw Error("[ERROR]: No Source file found");
 		}

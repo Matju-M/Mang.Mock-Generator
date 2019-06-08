@@ -1,5 +1,5 @@
-import { Generator } from "../generator";
 import faker = require('faker');
+import { Generator } from "../generator";
 import { Hero } from './test.model';
 
 let generator: Generator;

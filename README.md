@@ -8,6 +8,7 @@
 This library generates mock data from Typescript interfaces.
 
 ```js
+import faker = require("faker");
 import { Generator, Configuration } from "@mangm/ts-mock-generator";
 
 const generator = new Generator("./tsconfig.json");

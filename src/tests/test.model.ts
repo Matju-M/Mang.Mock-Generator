@@ -25,6 +25,7 @@ export enum ConcreteClassType {
 
 interface Material {
 	name?: string;
+	code?: number;
 	strength: number;
 	location?: MaterialLocation;
 }

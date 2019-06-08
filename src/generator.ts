@@ -19,7 +19,7 @@ export class Generator {
 	 * 
 	 * @param sourceFileName Source file name ex: test.model.ts
 	 * @param interfaceName Interface name ex: Hero
-	 * @param includeAllProps Include all Interface Properties. defaults to false.
+	 * @param config Configuration
 	 */
 	generate(sourceFileName: string, interfaceName: string, config?: Configuration): object {
 		const configuration = { ...DEFAULT_CONFIGURATION, ...config };

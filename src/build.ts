@@ -1,13 +1,20 @@
-import { forEach, isEmpty } from "lodash";
+import { forEach, isEmpty, Dictionary } from "lodash";
 import { SourceFile, ExpressionWithTypeArguments, Type } from "ts-morph";
 
-import { Configuration } from './generator.config';
+import { Configuration, PRIMITIVE_TYPES } from './generator.config';
 
-export function build<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, config: Configuration): T {
+export function build<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, config: Required<Configuration>): T {
 	return builder(interfaceName, sourceFile, skeleton, config, {});
 }
 
-function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, config: Configuration, recursions: object, hasOptionalParent?: boolean): T {
+function builder<T>(
+	interfaceName: string,
+	sourceFile: SourceFile,
+	skeleton: T,
+	config: Required<Configuration>,
+	recursions: object,
+	hasOptionalParent?: boolean
+): T {
 
 	const sanitizedInterfaceName = interfaceName.split(").").pop() || "";
 	const interfaceDeclaration = sourceFile.getInterface(sanitizedInterfaceName);
@@ -37,21 +44,16 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 
 		const propType = prop.getType().getNonNullableType();
 		const isPrimitive = isPrimitiveType(propType);
-		// let stopRecursion = false;
 
 		const sanitizedPropType = sanitizePropType(propType);
 		if (sanitizedInterfaceName === sanitizedPropType) {
 			recursions[sanitizedPropType] = recursions[sanitizedPropType] ? recursions[sanitizedPropType] + 1 : 1;
-			if (recursions[sanitizedPropType] > config.maxRecursiveLoop!) {
+			if (recursions[sanitizedPropType] > config.maxRecursiveLoop) {
 				console.warn(`[WARNING]: Stopping recursing exceeding maxRecursiveLoop for key: ${sanitizedPropType}`);
 				return;
 			}
 		}
 
-		// if (stopRecursion) {
-		// 	console.warn(`[WARNING]: Stopping recursing exceeding maxRecursiveLoop for key: ${sanitizedPropType}`);
-		// 	stopRecursion = false;
-		// } else 
 		if (propType.isEnum()) {
 			const sanitizedEnumInterface = propType.getText().split(").");
 			const enumInterface = sourceFile.getEnum(sanitizedEnumInterface.pop() || "");
@@ -89,7 +91,7 @@ function builder<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, 
 				skeleton[prop.getName()] = tempSkeleton;
 			}
 		} else if (addProp || hasOptionalParent) {
-			skeleton[prop.getName()] = getPrimitiveDefaultValue(propType);
+			skeleton[prop.getName()] = getPrimitiveDefaultValue(propType, config.primitiveValues);
 		}
 	});
 	return skeleton;
@@ -101,28 +103,11 @@ function sanitizePropType(type: Type): string {
 
 function isPrimitiveType(type: Type): boolean {
 	const t = type.getText();
-	return ["string[]", "string", "number[]", "number", "boolean", "boolean[]"].indexOf(t) > -1;
+	return PRIMITIVE_TYPES.indexOf(t) > -1;
 }
 
 // FIXME: this needs to be exposed so that user can add their own defaults (maybe fallback to this)
-function getPrimitiveDefaultValue(type: Type) {
+function getPrimitiveDefaultValue(type: Type, primitiveValues: Dictionary<any>) {
 	const t = type.getText();
-	if (t.indexOf("string[]") > -1) {
-		return ["[MOCK]"];
-	}
-	if (t.indexOf("string") > -1) {
-		return "[MOCK]";
-	}
-	if (t.indexOf("number[]") > -1) {
-		return [-1];
-	}
-	if (t.indexOf("number") > -1) {
-		return -1;
-	}
-	if (t.indexOf("boolean[]") > -1) {
-		return [true];
-	}
-	if (t.indexOf("boolean") > -1) {
-		return true;
-	}
+	return primitiveValues[t];
 }

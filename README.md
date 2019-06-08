@@ -7,14 +7,26 @@
 
 This library generates mock data from Typescript interfaces.
 
-
 ```js
 import { Generator, Configuration } from "@mangm/ts-mock-generator";
 
 const generator = new Generator("./tsconfig.json");
 const config: Configuration = {
-	includeAllProps: true, // this will include only optional data: defaults to false
-	maxRecursiveLoop: 2 // this will create only one recursive iteration if parent and child have the same interface: defaults to 1
+
+	// this will include only optional data: defaults to false
+	includeAllProps: true, 
+
+	// this will create only one recursive iteration if parent and child have the same interface: defaults to 1
+	maxRecursiveLoop: 2,
+
+	// defines a custom output for default primitive type. For now support is for
+	// number, number[], string, string[], boolean & boolean[]. This defaults to DEFAULT_PRIMITIVE_VALUES constant.
+	primitiveValues: {
+			"string[]": ["TEST"],
+			"string": "TEST",
+			"number[]": [-66],
+			"number": -66,
+		}
 };
 const data = generator.generate("test.model.ts", "Hero",  config);
 	
@@ -23,12 +35,12 @@ const data = generator.generate("test.model.ts", "Hero",  config);
 Output: 
 ```js
 {
-	"id": -1,
-	"name": "[MOCK]",
-	"code": "[MOCK]",
-	"sortOrder": -1,
-	"heroTypeIds": [-1],
-	"countryId": -1
+	"id": -66,
+	"name": "[TEST]",
+	"code": "[TEST]",
+	"sortOrder": -66,
+	"heroTypeIds": [-66],
+	"countryId": -66
 }
 ```
 

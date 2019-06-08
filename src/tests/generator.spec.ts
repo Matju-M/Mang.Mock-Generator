@@ -95,6 +95,7 @@ test("Bricks", () => {
 		material:
 		{
 			name: '[MOCK]',
+			code: -1,
 			location: {
 				name: '[MOCK]',
 				iso: '[MOCK]'
@@ -116,3 +117,44 @@ test("Bricks", () => {
 	};
 	expect(data).toEqual(expected);
 }); 
+
+test("Bricks with custom data", () => {
+	
+	const data = generator.generate("test.model.ts", "Bricks", {
+		primitiveValues: {
+			"string[]": ["TEST"],
+			"string": "TEST",
+			"number[]": [-66],
+			"number": -66,
+		}
+	});
+
+	expect(data).not.toBeUndefined();
+	const expected = {
+		material:
+		{
+			name: 'TEST',
+			code: -66,
+			location: {
+				name: 'TEST',
+				iso: 'TEST'
+			}
+		},
+		details: [
+			{
+				concreteClass: "C5",
+				code: 'TEST',
+				alternatives: [
+					{
+						name: "TEST",
+						iso: "TEST"
+					}
+				]
+			}
+		],
+		optional: 'TEST'
+	};
+	expect(data).toEqual(expected);
+});
+
+

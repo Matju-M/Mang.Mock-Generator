@@ -22,21 +22,26 @@ const config: Configuration = {
 	// defines a custom output for default primitive type. For now support is for
 	// number, number[], string, string[], boolean & boolean[]. This defaults to DEFAULT_PRIMITIVE_VALUES constant.
 	primitiveValues: {
-			"string[]": ["TEST"],
-			"string": "TEST",
-			"number[]": [-66],
-			"number": -66,
-		}
+		"string[]": ["TEST"],
+		"string": "TEST",
+		"number[]": [-66],
+		"number": -66,
+	}
 };
+
+generator.add("Hero", "name", faker.name.findName());
+
 const data = generator.generate("test.model.ts", "Hero",  config);
-	
+
+generator.remove("Hero", "name");
+
 ```
 
 Output: 
 ```js
 {
 	"id": -66,
-	"name": "[TEST]",
+	"name": "<Generated Differently Everytime>",
 	"code": "[TEST]",
 	"sortOrder": -66,
 	"heroTypeIds": [-66],

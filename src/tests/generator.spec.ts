@@ -1,4 +1,6 @@
 import { Generator } from "../generator";
+import faker = require('faker');
+import { Hero } from './test.model';
 
 let generator: Generator;
 
@@ -53,7 +55,7 @@ test("Hero {includeAllProps = false}", () => {
 });
 
 test("Hero {includeAllProps = true}", () => {
-	const data = generator.generate("test.model.ts", "Hero", { includeAllProps: true });
+	const data = generator.generate<Hero>("test.model.ts", "Hero", { includeAllProps: true });
 	expect(data).not.toBeUndefined();
 	const expected = {
 		"id": -1,
@@ -116,10 +118,10 @@ test("Bricks", () => {
 		optional: '[MOCK]'
 	};
 	expect(data).toEqual(expected);
-}); 
+});
 
 test("Bricks with custom data", () => {
-	
+
 	const data = generator.generate("test.model.ts", "Bricks", {
 		primitiveValues: {
 			"string[]": ["TEST"],
@@ -157,4 +159,13 @@ test("Bricks with custom data", () => {
 	expect(data).toEqual(expected);
 });
 
+test("Hero with custom fieldValues", () => {
+	generator.add("Hero", "name", faker.name.findName());
+	const data = generator.generate<Hero>("test.model.ts", "Hero", { includeAllProps: true });
 
+	expect(data).not.toBeUndefined();
+
+	expect(data.code).toEqual("[MOCK]");
+	expect(data.name).toBeDefined();
+	expect(data.name).not.toEqual("[MOCK]");
+});

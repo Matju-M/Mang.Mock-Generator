@@ -91,7 +91,7 @@ function builder<T>(
 				skeleton[prop.getName()] = tempSkeleton;
 			}
 		} else if (addProp || hasOptionalParent) {
-			skeleton[prop.getName()] = getPrimitiveDefaultValue(propType, config.primitiveValues);
+			skeleton[prop.getName()] = getValue(prop.getName(), propType, sanitizedInterfaceName, config);
 		}
 	});
 	return skeleton;
@@ -106,8 +106,16 @@ function isPrimitiveType(type: Type): boolean {
 	return PRIMITIVE_TYPES.indexOf(t) > -1;
 }
 
-// FIXME: this needs to be exposed so that user can add their own defaults (maybe fallback to this)
-function getPrimitiveDefaultValue(type: Type, primitiveValues: Dictionary<any>) {
+function getValue(key: string, type: Type, interfaceName: string, config: Required<Configuration>, ): any {
+	return getFieldValue(config.fieldValues, interfaceName, key) || getPrimitiveDefaultValue(type, config.primitiveValues)
+}
+
+function getPrimitiveDefaultValue(type: Type, primitiveValues: Dictionary<any>): any {
 	const t = type.getText();
 	return primitiveValues[t];
+}
+
+function getFieldValue(fieldValues: Dictionary<any>, interfaceName: string, key: string): any {
+	const fieldValueKey = `${interfaceName}-${key}`;
+	return fieldValues[fieldValueKey];
 }

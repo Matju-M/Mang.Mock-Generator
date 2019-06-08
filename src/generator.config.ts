@@ -4,6 +4,7 @@ export interface Configuration {
 	includeAllProps?: boolean;
 	maxRecursiveLoop?: number;
 	primitiveValues?: Dictionary<any>;
+	fieldValues?: Dictionary<any>;
 };
 
 
@@ -21,5 +22,6 @@ export const DEFAULT_PRIMITIVE_VALUES = {
 export const DEFAULT_CONFIGURATION = {
 	includeAllProps: false,
 	maxRecursiveLoop: 1,
-	primitiveValues: DEFAULT_PRIMITIVE_VALUES
+	primitiveValues: DEFAULT_PRIMITIVE_VALUES,
+	fieldValues: {}
 }

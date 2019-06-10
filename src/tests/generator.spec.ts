@@ -1,6 +1,6 @@
 import faker = require('faker');
 import { Generator } from "../generator";
-import { Hero } from './test.model';
+import { Hero, HeroRecursive } from './test.model';
 
 let generator: Generator;
 
@@ -12,12 +12,32 @@ beforeEach(() => {
 	expect(generator).not.toBeUndefined();
 });
 
+test("Configuration Fallback", () => {
+	generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
+
+	const data = generator.generate<HeroRecursive>("test.model.ts", "HeroRecursive", {
+		includeAllProps: true,
+		primitiveValues: {
+			"string[]": ["TEST"]
+		}
+	})
+
+	generator.remove<HeroRecursive>("HeroRecursive", "name");
+
+	expect(data.alt).toEqual("[MOCK]");
+	expect(data.codes).toEqual(["TEST"]);
+	expect(data.name).toBeDefined();
+	expect(data.name).not.toEqual("[MOCK]")
+	expect(data.heros).toBeDefined();
+});
+
 test("HeroRecursive", () => {
 	const data = generator.generate("test.model.ts", "HeroRecursive");
 	expect(data).not.toBeUndefined();
 	const expectedData = {
 		"heros": [{
 			"alt": "[MOCK]",
+			"codes": ["[MOCK]"],
 			"name": "[MOCK]"
 		}]
 	};
@@ -31,9 +51,11 @@ test("HeroRecursive { maxRecursiveLoop: 2}", () => {
 		"heros": [
 			{
 				"alt": "[MOCK]",
+				"codes": ["[MOCK]"],
 				"heros": [
 					{
 						"alt": "[MOCK]",
+						"codes": ["[MOCK]"],
 						"name": "[MOCK]"
 					}
 				], "name": "[MOCK]"

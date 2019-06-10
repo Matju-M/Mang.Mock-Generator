@@ -7,7 +7,6 @@ export interface Configuration {
 	fieldValues?: Dictionary<any>;
 };
 
-
 export const PRIMITIVE_TYPES = ["string[]", "string", "number[]", "number", "boolean", "boolean[]"];
 
 export const DEFAULT_PRIMITIVE_VALUES = {

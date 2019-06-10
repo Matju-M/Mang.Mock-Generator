@@ -2,7 +2,7 @@ import { Project, ts } from "ts-morph";
 
 import { build } from "./build";
 import { DEFAULT_CONFIGURATION, Configuration } from './generator.config';
-import { Dictionary } from 'lodash';
+import { Dictionary, merge } from 'lodash';
 
 export class Generator {
 
@@ -18,12 +18,12 @@ export class Generator {
 		console.log("Initialized with ts version", ts.version);
 	}
 
-	remove(interfaceName: string, propertyKey: string) {
+	remove<T>(interfaceName: string, propertyKey: keyof T) {
 		const key = `${interfaceName}-${propertyKey}`;
 		this.fieldValues[key] = undefined;
 	}
 
-	add(interfaceName: string, propertyKey: string, propertyValue: string) {
+	add<T>(interfaceName: string, propertyKey: keyof T, propertyValue: any) {
 
 		const value = {
 			[`${interfaceName}-${propertyKey}`]: propertyValue
@@ -40,11 +40,13 @@ export class Generator {
 	 */
 	generate<T>(sourceFileName: string, interfaceName: string, config?: Configuration): Partial<T> {
 
-		const configuration = {
-			...DEFAULT_CONFIGURATION,
-			["fieldValues"]: this.fieldValues,
-			...config
-		};
+		const configuration = merge(
+			{},
+			DEFAULT_CONFIGURATION,
+			{ ["fieldValues"]: this.fieldValues },
+			config
+		);
+
 		const sourceFile = this.project.getSourceFileOrThrow(sourceFileName);
 		let props = {};
 

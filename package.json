@@ -20,6 +20,7 @@
   },
   "scripts": {
     "compile": "tsc && node ./dist/index.js",
+    "examples": "tsc && node ./dist/examples/recursive-interface.js",
     "test": "jest"
   },
   "repository": {

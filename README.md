@@ -133,6 +133,8 @@ import { Generator } from '../generator';
 
 export interface HeroRecursive {
     name: string;
+    altName: string;
+    codes: string[];
     hero?: HeroRecursive
 }
 

@@ -56,14 +56,14 @@ By default, the generator has predefined settings.
 The following are the default primitive values. These can be overridden
 by defining one or more properties in primitiveValues configuration below.
 
-| Property  | Default    |
-|-----------|------------|
-| string[]  | ["[MOCK]"] |
-| string    | "[MOCK]"   |
-| number[]  | [-1]       |
-| number    | -2         |
-| boolean[] | [true]     |
-| boolean   | true       |
+| Property  | Default  |
+|-----------|----------|
+| string[]  | ["MOCK"] |
+| string    | "MOCK"   |
+| number[]  | [-1]     |
+| number    | -1       |
+| boolean[] | [true]   |
+| boolean   | true     |
 
 ### Default Generator Configuration
 
@@ -145,7 +145,7 @@ let data = generator.generate<HeroRecursive>("recursive-interface.ts", "HeroRecu
 
 console.log("::Default::", data);
 
-// OUTPUT >> ::Default:: { hero: { name: '[MOCK]' } }
+// OUTPUT >> ::Default:: { hero: { name: 'MOCK' } }
 ```
 
 ```js
@@ -155,7 +155,7 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 
 console.log("::IncludeAllProps::", data);
 
-// OUTPUT >> ::IncludeAllProps:: { name: '[MOCK]', hero: { name: '[MOCK]' } }
+// OUTPUT >> ::IncludeAllProps:: { name: 'MOCK', hero: { name: 'MOCK' } }
 
 ```
 
@@ -167,7 +167,7 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 
 console.log("::Max Recursion = 2::", data);
 
-// OUTPUT >> ::Max Recursion = 2:: { name: '[MOCK]',  hero: { name: '[MOCK]', hero: { name: '[MOCK]' } } }
+// OUTPUT >> ::Max Recursion = 2:: { name: 'MOCK',  hero: { name: 'MOCK', hero: { name: 'MOCK' } } }
 ```
 
 ```js
@@ -221,11 +221,11 @@ generator.remove<HeroRecursive>("HeroRecursive", "name");
 // OUTPUT >>
 // {
 //     name: 'Dion Jacobson',
-//     altName: '[MOCK]',
+//     altName: 'MOCK',
 //     codes: ['TEST'],
 //     hero: {
 //         name: 'Dion Jacobson',
-//         altName: '[MOCK]',
+//         altName: 'MOCK',
 //         codes: ['TEST']
 //     }
 // }

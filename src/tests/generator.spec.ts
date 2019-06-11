@@ -24,10 +24,10 @@ test("Configuration Fallback", () => {
 
 	generator.remove<HeroRecursive>("HeroRecursive", "name");
 
-	expect(data.alt).toEqual("[MOCK]");
+	expect(data.alt).toEqual("MOCK");
 	expect(data.codes).toEqual(["TEST"]);
 	expect(data.name).toBeDefined();
-	expect(data.name).not.toEqual("[MOCK]")
+	expect(data.name).not.toEqual("MOCK")
 	expect(data.heros).toBeDefined();
 });
 
@@ -36,9 +36,9 @@ test("HeroRecursive", () => {
 	expect(data).not.toBeUndefined();
 	const expectedData = {
 		"heros": [{
-			"alt": "[MOCK]",
-			"codes": ["[MOCK]"],
-			"name": "[MOCK]"
+			"alt": "MOCK",
+			"codes": ["MOCK"],
+			"name": "MOCK"
 		}]
 	};
 	expect(data).toEqual(expectedData);
@@ -50,15 +50,15 @@ test("HeroRecursive { maxRecursiveLoop: 2}", () => {
 	const expectedData = {
 		"heros": [
 			{
-				"alt": "[MOCK]",
-				"codes": ["[MOCK]"],
+				"alt": "MOCK",
+				"codes": ["MOCK"],
 				"heros": [
 					{
-						"alt": "[MOCK]",
-						"codes": ["[MOCK]"],
-						"name": "[MOCK]"
+						"alt": "MOCK",
+						"codes": ["MOCK"],
+						"name": "MOCK"
 					}
-				], "name": "[MOCK]"
+				], "name": "MOCK"
 			}
 		]
 	};
@@ -81,8 +81,8 @@ test("Hero {includeAllProps = true}", () => {
 	expect(data).not.toBeUndefined();
 	const expected = {
 		"id": -1,
-		"name": "[MOCK]",
-		"code": "[MOCK]",
+		"name": "MOCK",
+		"code": "MOCK",
 		"sortOrder": -1,
 		"heroTypeIds": [-1],
 		"countryId": -1
@@ -99,11 +99,11 @@ test("HeroTypesMenu", () => {
 				"countries": [{
 					"localities": [{
 						"id": -1,
-						"heroName": "[MOCK]",
-						"heroType": "[MOCK]"
+						"heroName": "MOCK",
+						"heroType": "MOCK"
 					}],
 					"id": -1,
-					"name": "[MOCK]"
+					"name": "MOCK"
 				}]
 			}]
 		}]
@@ -118,26 +118,26 @@ test("Bricks", () => {
 	const expected = {
 		material:
 		{
-			name: '[MOCK]',
+			name: 'MOCK',
 			code: -1,
 			location: {
-				name: '[MOCK]',
-				iso: '[MOCK]'
+				name: 'MOCK',
+				iso: 'MOCK'
 			}
 		},
 		details: [
 			{
 				concreteClass: "C5",
-				code: '[MOCK]',
+				code: 'MOCK',
 				alternatives: [
 					{
-						name: "[MOCK]",
-						iso: "[MOCK]"
+						name: "MOCK",
+						iso: "MOCK"
 					}
 				]
 			}
 		],
-		optional: '[MOCK]'
+		optional: 'MOCK'
 	};
 	expect(data).toEqual(expected);
 });
@@ -187,7 +187,7 @@ test("Hero with custom fieldValues", () => {
 
 	expect(data).not.toBeUndefined();
 
-	expect(data.code).toEqual("[MOCK]");
+	expect(data.code).toEqual("MOCK");
 	expect(data.name).toBeDefined();
-	expect(data.name).not.toEqual("[MOCK]");
+	expect(data.name).not.toEqual("MOCK");
 });

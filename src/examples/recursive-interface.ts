@@ -13,7 +13,7 @@ let data = generator.generate<HeroRecursive>("recursive-interface.ts", "HeroRecu
 
 console.log("::Default::", data);
 
-// OUTPUT >> ::Default:: { hero: { name: '[MOCK]', altName: '[MOCK]', codes: [ '[MOCK]' ] } }
+// OUTPUT >> ::Default:: { hero: { name: 'MOCK', altName: 'MOCK', codes: [ 'MOCK' ] } }
 
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 	includeAllProps: true
@@ -23,13 +23,13 @@ console.log("::IncludeAllProps::", data);
 
 // OUTPUT >> ::IncludeAllProps:: 
 // {
-// 	name: '[MOCK]',
-// 	altName: '[MOCK]',
-// 	codes: ['[MOCK]'],
+// 	name: 'MOCK',
+// 	altName: 'MOCK',
+// 	codes: ['MOCK'],
 // 	hero: {
-// 		name: '[MOCK]',
-// 		altName: '[MOCK]',
-// 		codes: ['[MOCK]']
+// 		name: 'MOCK',
+// 		altName: 'MOCK',
+// 		codes: ['MOCK']
 // 	}
 // }
 
@@ -42,18 +42,18 @@ console.log("::Max Recursion = 2::", data);
 
 // OUTPUT >> ::Max Recursion = 2:: 
 // {
-// 	name: '[MOCK]',
-// 	altName: '[MOCK]',
-// 	codes: ['[MOCK]'],
+// 	name: 'MOCK',
+// 	altName: 'MOCK',
+// 	codes: ['MOCK'],
 // 	hero:
 // 	{
-// 		name: '[MOCK]',
-// 		altName: '[MOCK]',
-// 		codes: ['[MOCK]'],
+// 		name: 'MOCK',
+// 		altName: 'MOCK',
+// 		codes: ['MOCK'],
 // 		hero: { 
-// 			name: '[MOCK]', 
-// 			altName: '[MOCK]', 
-// 			codes: ['[MOCK]'] 
+// 			name: 'MOCK', 
+// 			altName: 'MOCK', 
+// 			codes: ['MOCK'] 
 // 		}
 // 	}
 // }
@@ -72,13 +72,13 @@ generator.remove<HeroRecursive>("HeroRecursive", "name");
 // OUTPUT >> ::Field Values:: 
 // {
 // 	name: 'Jarrell Williamson',
-// 	altName: '[MOCK]',
-// 	codes: ['[MOCK]'],
+// 	altName: 'MOCK',
+// 	codes: ['MOCK'],
 // 	hero:
 // 	{
 // 		name: 'Jarrell Williamson',
-// 		altName: '[MOCK]',
-// 		codes: ['[MOCK]']
+// 		altName: 'MOCK',
+// 		codes: ['MOCK']
 // 	}
 // }
 
@@ -123,11 +123,11 @@ generator.remove<HeroRecursive>("HeroRecursive", "name");
 // OUTPUT >> 
 // { 
 // 	name: 'Hailey Rempel',
-//   	altName: '[MOCK]',
+//   	altName: 'MOCK',
 //   	codes: [ 'TEST' ],
 // 	hero: { 
 // 		name: 'Hailey Rempel', 
-// 		altName: '[MOCK]', 
+// 		altName: 'MOCK', 
 // 		codes: [ 'TEST' ] 
 // 	} 
 // }

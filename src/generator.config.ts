@@ -10,8 +10,8 @@ export interface Configuration {
 export const PRIMITIVE_TYPES = ["string[]", "string", "number[]", "number", "boolean", "boolean[]"];
 
 export const DEFAULT_PRIMITIVE_VALUES = {
-	"string[]": ["[MOCK]"],
-	"string": "[MOCK]",
+	"string[]": ["MOCK"],
+	"string": "MOCK",
 	"number[]": [-1],
 	"number": -1,
 	"boolean[]": [true],

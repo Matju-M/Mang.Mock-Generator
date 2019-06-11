@@ -4,15 +4,17 @@
 [![Build Status](https://travis-ci.com/Matju-M/Mang.Mock-Generator.svg?token=6znnpbkcfbTWdET8AcgS&branch=master)](https://travis-ci.com/Matju-M/Mang.Mock-Generator)
 [![npm version](https://img.shields.io/npm/v/@mangm/ts-mock-generator.svg)](https://www.npmjs.com/package/@mangm/ts-mock-generator)
 
-
 This library generates mock data from Typescript interfaces.
 
 Generate Mock Data from Typescript Interfaces. Includes support for [faker](https://www.npmjs.com/package/faker)
 
 ## Installation
+
 Install `ts-mock-generator` via npm:
 
-	npm i @mangm/ts-mock-generator
+```bash
+npm i @mangm/ts-mock-generator
+```
 
 This package internally uses [ts-morph](https://github.com/dsherret/ts-morph).
 
@@ -25,27 +27,28 @@ import { Generator, Configuration } from "@mangm/ts-mock-generator";
 const generator = new Generator("./tsconfig.json");
 
 export interface Hero {
-	id: number;
-	name: string;
-	code: string;
-	sortOrder?: number;
-	heroTypeIds?: number[];
-	countryId?: number;
+    id: number;
+    name: string;
+    code: string;
+    sortOrder?: number;
+    heroTypeIds?: number[];
+    countryId?: number;
 }
 
 const data = generator.generate("current-files.ts", "Hero");
 console.log(data);
 
 // Output
-{ 
-	"sortOrder": -1,
-	"heroTypeIds": [-1],
-	"countryId": -1
+{
+    "sortOrder": -1,
+    "heroTypeIds": [-1],
+    "countryId": -1
 }
- 
+
 ```
 
 ## Defaults Configurations
+
 By default, the generator has predefined settings.
 
 ### Default Primitive Values
@@ -62,25 +65,25 @@ by defining one or more properties in primitiveValues configuration below.
 | boolean[] | [true]     |
 | boolean   | true       |
 
-
 ### Default Generator Configuration
+
 The configuration is preset as in constant `DEFAULT_CONFIGURATION`.
 
-| Property         | Description                                                                                                | Default  |
-|------------------|------------------------------------------------------------------------------------------------------------|----------|
-| includeAllProps  | include all properties, optional and not                                                                   | false    |
+| Property         | Description                                                                                                           | Default  |
+|------------------|-----------------------------------------------------------------------------------------------------------------------|----------|
+| includeAllProps  | include all properties, optional and not                                                                              | false    |
 | maxRecursiveLoop | Limits the recursive iterations for the same interface as shown in examples with interface [HeroRecursive](#Examples) | 1        |
-| primitiveValues  | Default Primitive Value Dictionary as above                                                                | As above |
-| fieldValues      | Custom values for each key in an interface.                                                                | {}       |
+| primitiveValues  | Default Primitive Value Dictionary as above                                                                           | As above |
+| fieldValues      | Custom values for each key in an interface.                                                                           | {}       |
 
 ```js
 const data = generator.generate("current-files.ts", "Hero", optionalConfig);
 ```
 
-
 ## API
 
 ### Creating the Generator
+
 Specify the location of the tsconfig. Relative to the root directory.
 
 ```js
@@ -88,6 +91,7 @@ const generator = new Generator("./tsconfig.json");
 ```
 
 ### Generate()
+
  The main function to generate the mock objects
 
  ```js
@@ -100,8 +104,8 @@ const generator = new Generator("./tsconfig.json");
 | interfaceName  | The interface name.                                                                  | string        | true     |
 | config         | Refer to section [Default Generator Configuration](#Default-Generator-Configuration) | Configuration | false    |
 
+### Add < T >()
 
-### Add<T>()
 The add function is used to add keys to the Fields Value Dictionary in the [Default Generator Configuration](#Default-Generator-Configuration)
 
 interfaceName: string, propertyKey: keyof T, propertyValue: string
@@ -112,7 +116,8 @@ interfaceName: string, propertyKey: keyof T, propertyValue: string
 | propertyKey   | the property key. Key is dependant on the interface T | keyof T |
 | propertyValue | any value                                             | any     |
 
-### Remove<T>()
+### Remove < T >()
+
 The remove funtion is used to remove keys to the Fields Value Dictionary in the s[Default Generator Configuration](#Default-Generator-Configuration)
 
 | Option        | Description                                           | Type    |
@@ -121,14 +126,14 @@ The remove funtion is used to remove keys to the Fields Value Dictionary in the 
 | propertyKey   | the property key. Key is dependant on the interface T | keyof T |
 
 ## Examples
-```js
 
+```js
 import faker = require('faker');
 import { Generator } from '../generator';
 
 export interface HeroRecursive {
-	name: string;
-	hero?: HeroRecursive
+    name: string;
+    hero?: HeroRecursive
 }
 
 const generator = new Generator("tsconfig.json");
@@ -143,7 +148,7 @@ console.log("::Default::", data);
 
 ```js
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
-	includeAllProps: true
+    includeAllProps: true
 });
 
 console.log("::IncludeAllProps::", data);
@@ -151,22 +156,24 @@ console.log("::IncludeAllProps::", data);
 // OUTPUT >> ::IncludeAllProps:: { name: '[MOCK]', hero: { name: '[MOCK]' } }
 
 ```
+
 ```js
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
-	includeAllProps: true,
-	maxRecursiveLoop: 2
+    includeAllProps: true,
+    maxRecursiveLoop: 2
 })
 
 console.log("::Max Recursion = 2::", data);
 
 // OUTPUT >> ::Max Recursion = 2:: { name: '[MOCK]',  hero: { name: '[MOCK]', hero: { name: '[MOCK]' } } }
 ```
+
 ```js
 // Using Field Values to add customised generated data.
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
-	includeAllProps: true
+    includeAllProps: true
 })
 
 console.log("::Field Values::", data);
@@ -179,14 +186,14 @@ generator.remove<HeroRecursive>("HeroRecursive", "name");
 ```js
 // Using Primitive Values. Currently support is for string, number and boolean
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
-	primitiveValues: {
-		"string[]": ["TEST"],
-		"string": "TEST",
-		"number[]": [-66],
-		"number": -66,
-		"boolean[]": [false],
-		"boolean": false,
-	}
+    primitiveValues: {
+        "string[]": ["TEST"],
+        "string": "TEST",
+        "number[]": [-66],
+        "number": -66,
+        "boolean[]": [false],
+        "boolean": false,
+    }
 })
 
 console.log("::Primitive Values::", data);
@@ -200,25 +207,25 @@ console.log("::Primitive Values::", data);
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
-	includeAllProps: true,
-	primitiveValues: {
-		"string[]": ["TEST"]
-	}
+    includeAllProps: true,
+    primitiveValues: {
+        "string[]": ["TEST"]
+    }
 })
 
 console.log("::Fallbacks::", data);
 generator.remove<HeroRecursive>("HeroRecursive", "name");
 
-// OUTPUT >> 
+// OUTPUT >>
 // {
-// 	name: 'Dion Jacobson',
-// 		altName: '[MOCK]',
-// 			codes: ['TEST'],
-// 				hero: { 
-// 					name: 'Dion Jacobson', 
-// 					altName: '[MOCK]', 
-// 					codes: ['TEST'] 
-// 				}
+//     name: 'Dion Jacobson',
+//     altName: '[MOCK]',
+//     codes: ['TEST'],
+//     hero: {
+//         name: 'Dion Jacobson',
+//         altName: '[MOCK]',
+//         codes: ['TEST']
+//     }
 // }
 
 ```

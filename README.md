@@ -145,7 +145,12 @@ let data = generator.generate<HeroRecursive>("recursive-interface.ts", "HeroRecu
 
 console.log("::Default::", data);
 
-// OUTPUT >> ::Default:: { hero: { name: 'MOCK' } }
+// OUTPUT >> ::Default::
+// {
+//     hero: {
+//         name: 'MOCK'
+//     }
+// }
 ```
 
 ```js
@@ -155,7 +160,13 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 
 console.log("::IncludeAllProps::", data);
 
-// OUTPUT >> ::IncludeAllProps:: { name: 'MOCK', hero: { name: 'MOCK' } }
+// OUTPUT >> ::IncludeAllProps::
+// {
+//     name: 'MOCK',
+//     hero: {
+//         name: 'MOCK'
+//     }
+// }
 
 ```
 
@@ -167,7 +178,16 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 
 console.log("::Max Recursion = 2::", data);
 
-// OUTPUT >> ::Max Recursion = 2:: { name: 'MOCK',  hero: { name: 'MOCK', hero: { name: 'MOCK' } } }
+// OUTPUT >> ::Max Recursion = 2::
+// {
+//     name: 'MOCK',  
+//     hero: {
+//         name: 'MOCK',
+//         hero: {
+//             name: 'MOCK'
+//         }
+//     }
+// }
 ```
 
 ```js
@@ -182,7 +202,13 @@ console.log("::Field Values::", data);
 
 generator.remove<HeroRecursive>("HeroRecursive", "name");
 
-// OUTPUT >> ::Field Values:: { name: 'Duncan Kulas', hero: { name: 'Duncan Kulas' } }
+// OUTPUT >> ::Field Values::
+// {
+//     name: 'Duncan Kulas',
+//     hero: {
+//         name: 'Duncan Kulas'
+//     }
+// }
 ```
 
 ```js
@@ -200,7 +226,12 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 
 console.log("::Primitive Values::", data);
 
-// OUTPUT >> ::Primitive Values:: { hero: { name: 'TEST' } }
+// OUTPUT >> ::Primitive Values::
+// {
+//     hero: {
+//         name: 'TEST'
+//     }
+// }
 ```
 
 ```js

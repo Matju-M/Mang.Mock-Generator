@@ -72,6 +72,14 @@ export interface LocalitiesMenu {
 export interface HeroRecursive {
 	alt: string;
 	codes: string[];
+	heroType: HeroType,
 	heros?: HeroRecursive[],
 	name: string;
+}
+
+export enum HeroType {
+	Fire,
+	Wood,
+	Ice,
+	Rock
 }

@@ -5,7 +5,15 @@ export interface HeroRecursive {
 	name: string;
 	altName: string;
 	codes: string[];
-	hero?: HeroRecursive
+	heroType: HeroType;
+	hero?: HeroRecursive;
+}
+
+export enum HeroType {
+	Fire,
+	Wood,
+	Ice,
+	Rock
 }
 
 const generator = new Generator("tsconfig.json");
@@ -26,10 +34,12 @@ console.log("::IncludeAllProps::", data);
 // 	name: 'MOCK',
 // 	altName: 'MOCK',
 // 	codes: ['MOCK'],
+//  heroType: 'Fire',
 // 	hero: {
 // 		name: 'MOCK',
 // 		altName: 'MOCK',
 // 		codes: ['MOCK']
+//      heroType: 'Fire'
 // 	}
 // }
 
@@ -45,21 +55,25 @@ console.log("::Max Recursion = 2::", data);
 // 	name: 'MOCK',
 // 	altName: 'MOCK',
 // 	codes: ['MOCK'],
+//  heroType: 'Fire',
 // 	hero:
 // 	{
 // 		name: 'MOCK',
 // 		altName: 'MOCK',
 // 		codes: ['MOCK'],
+//      heroType: 'Fire',
 // 		hero: { 
 // 			name: 'MOCK', 
 // 			altName: 'MOCK', 
-// 			codes: ['MOCK'] 
+// 			codes: ['MOCK'],
+//          heroType: 'Fire',
 // 		}
 // 	}
 // }
 
 // Using Field Values to add customised generated data.
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
+generator.add<HeroRecursive>("HeroRecursive", "heroType", HeroType.Rock);
 
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 	includeAllProps: true
@@ -68,17 +82,20 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 console.log("::Field Values::", data);
 
 generator.remove<HeroRecursive>("HeroRecursive", "name");
+generator.remove<HeroRecursive>("HeroRecursive", "heroType");
 
 // OUTPUT >> ::Field Values:: 
 // {
 // 	name: 'Jarrell Williamson',
 // 	altName: 'MOCK',
 // 	codes: ['MOCK'],
+//  heroType: 3
 // 	hero:
 // 	{
 // 		name: 'Jarrell Williamson',
 // 		altName: 'MOCK',
-// 		codes: ['MOCK']
+// 		codes: ['MOCK'],
+//      heroType: 3
 // 	}
 // }
 
@@ -91,7 +108,7 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 		"number[]": [-66],
 		"number": -66,
 		"boolean[]": [false],
-		"boolean": false,
+		"boolean": false
 	}
 })
 
@@ -102,7 +119,8 @@ console.log("::Primitive Values::", data);
 // 	hero: { 
 // 		name: 'TEST',
 // 		altName: 'TEST', 
-// 		codes: [ 'TEST' ] 
+// 		codes: [ 'TEST' ],
+//		heroType: 'Fire'
 // 	} 
 // }
 
@@ -123,12 +141,14 @@ generator.remove<HeroRecursive>("HeroRecursive", "name");
 // OUTPUT >> 
 // { 
 // 	name: 'Hailey Rempel',
-//   	altName: 'MOCK',
-//   	codes: [ 'TEST' ],
+//  altName: 'MOCK',
+//  codes: [ 'TEST' ],
+//  heroType: 'Fire',
 // 	hero: { 
 // 		name: 'Hailey Rempel', 
 // 		altName: 'MOCK', 
 // 		codes: [ 'TEST' ] 
+//      heroType: 'Fire'
 // 	} 
 // }
 

@@ -54,12 +54,14 @@ function builder<T>(
 			}
 		}
 
-		if (propType.isEnum()) {
+		if (propType.isEnum() && (addProp || hasOptionalParent)) {
 			const sanitizedEnumInterface = propType.getText().split(").");
 			const enumInterface = sourceFile.getEnum(sanitizedEnumInterface.pop() || "");
 			if (enumInterface) {
+				const fieldValue = getFieldValue(config.fieldValues, interfaceName, prop.getName());
 				const enumMember = enumInterface.getMembers()[0]; // Get First Member;
-				skeleton[prop.getName()] = enumMember.getText();
+
+				skeleton[prop.getName()] = fieldValue ? fieldValue : enumMember.getText();
 			} else {
 				console.error(`[ERROR]: Enum Interface ${propType.getText()} not found!`);
 			}

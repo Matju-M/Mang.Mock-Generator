@@ -193,21 +193,30 @@ console.log("::Max Recursion = 2::", data);
 ```js
 // Using Field Values to add customised generated data.
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
+generator.add<HeroRecursive>("HeroRecursive", "heroType", HeroType.Rock);
 
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
-    includeAllProps: true
+	includeAllProps: true
 })
 
 console.log("::Field Values::", data);
 
 generator.remove<HeroRecursive>("HeroRecursive", "name");
+generator.remove<HeroRecursive>("HeroRecursive", "heroType");
 
-// OUTPUT >> ::Field Values::
+// OUTPUT >> ::Field Values:: 
 // {
-//     name: 'Duncan Kulas',
-//     hero: {
-//         name: 'Duncan Kulas'
-//     }
+// 	name: 'Jarrell Williamson',
+// 	altName: 'MOCK',
+// 	codes: ['MOCK'],
+//  heroType: 3
+// 	hero:
+// 	{
+// 		name: 'Jarrell Williamson',
+// 		altName: 'MOCK',
+// 		codes: ['MOCK'],
+//      heroType: 3
+// 	}
 // }
 ```
 

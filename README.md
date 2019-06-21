@@ -21,6 +21,8 @@ This package internally uses [ts-morph](https://github.com/dsherret/ts-morph).
 ## Basic Usage
 
 ```js
+// current-file.ts
+
 import faker = require("faker");
 import { Generator, Configuration } from "@mangm/ts-mock-generator";
 
@@ -35,7 +37,7 @@ export interface Hero {
     countryId?: number;
 }
 
-const data = generator.generate("current-files.ts", "Hero");
+const data = generator.generate("current-file.ts", "Hero");
 console.log(data);
 
 // Output
@@ -128,6 +130,8 @@ The remove funtion is used to remove keys to the Fields Value Dictionary in the 
 ## Examples
 
 ```js
+// recursive-interface.ts
+
 import faker = require('faker');
 import { Generator } from '../generator';
 
@@ -193,6 +197,8 @@ console.log("::Max Recursion = 2::", data);
 ```js
 // Using Field Values to add customised generated data.
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
+
+// Preset Enum Value
 generator.add<HeroRecursive>("HeroRecursive", "heroType", HeroType.Rock);
 
 data = generator.generate("recursive-interface.ts", "HeroRecursive", {
@@ -201,6 +207,7 @@ data = generator.generate("recursive-interface.ts", "HeroRecursive", {
 
 console.log("::Field Values::", data);
 
+// Remove Preset values
 generator.remove<HeroRecursive>("HeroRecursive", "name");
 generator.remove<HeroRecursive>("HeroRecursive", "heroType");
 

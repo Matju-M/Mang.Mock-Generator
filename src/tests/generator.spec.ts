@@ -1,6 +1,6 @@
-import faker = require('faker');
+import * as faker from "faker";
 import { Generator } from "../generator";
-import { HeroRecursive, HeroType, Hero } from './test.model';
+import { HeroRecursive, HeroType, Hero } from "./test.model";
 
 let generator: Generator;
 
@@ -97,7 +97,7 @@ test("Hero {includeAllProps = true}", () => {
 });
 
 test("HeroTypesMenu", () => {
-	const data = generator.generate("test.model.ts", "HeroTypesMenu");
+	const data = generator.generate("test.model.ts", "HeroTypesMenu", { includeAllProps: false });
 	expect(data).not.toBeUndefined();
 	const expected = {
 		"heroTypes": [{

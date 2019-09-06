@@ -46,8 +46,11 @@ export interface HeroTypesMenu {
 	heroTypes: HeroTypes[];
 }
 
-export interface EntityMenu {
+export interface Menu {
 	id: number;
+}
+
+export interface EntityMenu extends Menu {
 	name: string;
 }
 
@@ -63,8 +66,7 @@ export interface CountriesMenu extends EntityMenu {
 	localities?: LocalitiesMenu[];
 }
 
-export interface LocalitiesMenu {
-	id: number;
+export interface LocalitiesMenu extends Menu {
 	heroName: string;
 	heroType: string;
 }

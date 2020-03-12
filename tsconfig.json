@@ -25,7 +25,6 @@
 		"src/**/*.ts"
 	],
 	"exclude": [
-		"node_modules",
 		"**/*.d.ts"
 	]
 }

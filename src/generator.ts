@@ -1,8 +1,8 @@
 import { Project, ts } from "ts-morph";
+import { Dictionary, merge } from 'lodash';
 
 import { build } from "./build";
 import { DEFAULT_CONFIGURATION, Configuration } from './generator.config';
-import { Dictionary, merge } from 'lodash';
 
 export class Generator {
 
@@ -16,6 +16,10 @@ export class Generator {
 
 		this.fieldValues = {};
 		console.log("Initialized with ts version", ts.version);
+	}
+
+	removeAll() {
+		this.fieldValues = {};
 	}
 
 	remove<T>(interfaceName: string, propertyKey: keyof T) {
@@ -38,7 +42,7 @@ export class Generator {
 	 * @param interfaceName Interface name ex: Hero
 	 * @param config Configuration
 	 */
-	generate<T>(sourceFileName: string, interfaceName: string, config?: Configuration): Partial<T> {
+	generate<T>(interfaceName: string, config?: Configuration): Partial<T> {
 
 		const configuration = merge(
 			{},
@@ -47,11 +51,12 @@ export class Generator {
 			config
 		);
 
-		const sourceFile = this.project.getSourceFileOrThrow(sourceFileName);
+		this.project.addSourceFilesAtPaths("node_modules/**/*.d.ts");
+		const files = this.project.getSourceFiles();
 		let props = {};
 
-		if (sourceFile) {
-			props = build(interfaceName, sourceFile, props, configuration);
+		if (files) {
+			props = build(interfaceName, files, props, configuration);
 		} else {
 			throw Error("[ERROR]: No Source file found");
 		}

@@ -1,15 +1,15 @@
-import { forEach, isEmpty, Dictionary } from "lodash";
+import { forEach, isEmpty, Dictionary, head, map, compact } from "lodash";
 import { SourceFile, ExpressionWithTypeArguments, Type, InterfaceDeclaration, PropertySignature } from "ts-morph";
 
 import { Configuration, PRIMITIVE_TYPES } from './generator.config';
 
-export function build<T>(interfaceName: string, sourceFile: SourceFile, skeleton: T, config: Required<Configuration>): T {
-	return builder(interfaceName, sourceFile, skeleton, config, {});
+export function build<T>(interfaceName: string, sourceFiles: SourceFile[], skeleton: T, config: Required<Configuration>): T {
+	return builder(interfaceName, sourceFiles, skeleton, config, {});
 }
 
 function builder<T>(
 	interfaceName: string,
-	sourceFile: SourceFile,
+	sourceFiles: SourceFile[],
 	skeleton: T,
 	config: Required<Configuration>,
 	recursions: object,
@@ -17,14 +17,15 @@ function builder<T>(
 ): T {
 
 	const sanitizedInterfaceName = sanitizeInterface(interfaceName);
-	const interfaceDeclaration = sourceFile.getInterface(sanitizedInterfaceName);
-
+	const interfaceDeclaration = getInterfaceByName(sourceFiles, sanitizedInterfaceName);
 	if (!interfaceDeclaration) {
 		return skeleton;
 	}
+
+	// interfaceDeclaration.getExtends().forEach(x => console.log("::1>>", x.getText(), head(x.getDescendants()).));
 	const props = interfaceDeclaration.getProperties();
 
-	props.push(...getExtendedProps(interfaceDeclaration, sourceFile));
+	props.push(...getExtendedProps(interfaceDeclaration, sourceFiles));
 
 	props.forEach(prop => {
 
@@ -47,11 +48,11 @@ function builder<T>(
 			}
 		}
 
-
 		if (propType.isEnum() && (addProp || hasOptionalParent)) {
 
 			const sanitizedEnumInterface = propType.getText().split(").");
-			const enumInterface = sourceFile.getEnum(sanitizedEnumInterface.pop() || "");
+			const sanitizedInterfaceItem = sanitizedEnumInterface.pop() || "";
+			const enumInterface = head(compact(map(sourceFiles, x => x.getEnum(sanitizedInterfaceItem))))
 			if (enumInterface) {
 				const fieldValue = getFieldValue(config.fieldValues, interfaceName, prop.getName());
 				const enumMember = enumInterface.getMembers()[0]; // Get First Member;
@@ -64,7 +65,7 @@ function builder<T>(
 			const tempSkeleton = [{}];
 			builder(
 				sanitizedPropType,
-				sourceFile,
+				sourceFiles,
 				tempSkeleton[0],
 				config,
 				recursions,
@@ -78,7 +79,7 @@ function builder<T>(
 			const tempSkeleton = {};
 			builder(
 				sanitizedPropType,
-				sourceFile,
+				sourceFiles,
 				tempSkeleton,
 				config,
 				recursions,
@@ -117,15 +118,16 @@ function getFieldValue(fieldValues: Dictionary<any>, interfaceName: string, key:
 	return fieldValues[fieldValueKey];
 }
 
-function getExtendedProps(declaration: InterfaceDeclaration, sourceFile: SourceFile): PropertySignature[] {
+function getExtendedProps(declaration: InterfaceDeclaration, sourceFiles: SourceFile[]): PropertySignature[] {
 	const props: PropertySignature[] = [];
 	const interfaceExtends = declaration.getExtends();
+
 	if (!interfaceExtends.length) {
 		return declaration.getProperties();
 	}
 
 	forEach(interfaceExtends, (e: ExpressionWithTypeArguments) => {
-		const extendedDeclaration = sourceFile.getInterface(e.getText());
+		const extendedDeclaration = getInterface(sourceFiles, e);
 
 		if (extendedDeclaration) {
 			const extended = extendedDeclaration.getExtends();
@@ -133,10 +135,9 @@ function getExtendedProps(declaration: InterfaceDeclaration, sourceFile: SourceF
 				forEach(extended, a => {
 					const propType = a.getType().getNonNullableType();
 					if (!isPrimitiveType(propType)) {
-						const sanitizedInterfaceName = sanitizeInterface(a.getText());
-						const interfaceDeclaration = sourceFile.getInterface(sanitizedInterfaceName);
+						const interfaceDeclaration = getInterface(sourceFiles, a);
 						if (interfaceDeclaration) {
-							const extendedProps = getExtendedProps(interfaceDeclaration, sourceFile);
+							const extendedProps = getExtendedProps(interfaceDeclaration, sourceFiles);
 							props.push(...extendedProps);
 						}
 					}
@@ -147,6 +148,22 @@ function getExtendedProps(declaration: InterfaceDeclaration, sourceFile: SourceF
 	});
 
 	return props;
+}
+
+function getInterface(sourceFiles: SourceFile[], exp: ExpressionWithTypeArguments): InterfaceDeclaration | undefined {
+	const name = sanitizeInterface(exp.getText());
+	return getInterfaceByName(sourceFiles, name);
+}
+
+function getInterfaceByName(sourceFiles: SourceFile[], name: string): InterfaceDeclaration | undefined {
+	const extendedDeclaration = head(compact(sourceFiles.map(x => {
+		if (x.isInNodeModules()) {
+			return head(compact(x.getNamespaces().map(x => x.getInterface(name))));
+		} else {
+			return x.getInterface(name);
+		}
+	})));
+	return extendedDeclaration;
 }
 
 function sanitizeInterface(interfaceName: string): string {

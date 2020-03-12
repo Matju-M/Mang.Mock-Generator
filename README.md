@@ -37,7 +37,7 @@ export interface Hero {
     countryId?: number;
 }
 
-const data = generator.generate("current-file.ts", "Hero");
+const data = generator.generate("Hero");
 console.log(data);
 
 // Output
@@ -79,7 +79,7 @@ The configuration is preset as in constant `DEFAULT_CONFIGURATION`.
 | fieldValues      | Custom values for each key in an interface.                                                                           | {}       |
 
 ```js
-const data = generator.generate("current-files.ts", "Hero", optionalConfig);
+const data = generator.generate("Hero", optionalConfig);
 ```
 
 ## API
@@ -97,12 +97,11 @@ const generator = new Generator("./tsconfig.json");
  The main function to generate the mock objects
 
  ```js
- const data = generator.generate("current-files.ts", "Hero", config);
+ const data = generator.generate("Hero", config);
  ```
 
 | Option         | Description                                                                          | Type          | Required |
 |----------------|--------------------------------------------------------------------------------------|---------------|----------|
-| SourceFileName | The source file name. Include the `.ts`                                              | string        | true     |
 | interfaceName  | The interface name.                                                                  | string        | true     |
 | config         | Refer to section [Default Generator Configuration](#Default-Generator-Configuration) | Configuration | false    |
 
@@ -145,7 +144,7 @@ export interface HeroRecursive {
 const generator = new Generator("tsconfig.json");
 
 // Basic Usage Generate Interface using default parameters
-let data = generator.generate<HeroRecursive>("recursive-interface.ts", "HeroRecursive");
+let data = generator.generate<HeroRecursive>("HeroRecursive");
 
 console.log("::Default::", data);
 
@@ -158,7 +157,7 @@ console.log("::Default::", data);
 ```
 
 ```js
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
     includeAllProps: true
 });
 
@@ -175,7 +174,7 @@ console.log("::IncludeAllProps::", data);
 ```
 
 ```js
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
     includeAllProps: true,
     maxRecursiveLoop: 2
 })
@@ -201,7 +200,7 @@ generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 // Preset Enum Value
 generator.add<HeroRecursive>("HeroRecursive", "heroType", HeroType.Rock);
 
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
 	includeAllProps: true
 })
 
@@ -229,7 +228,7 @@ generator.remove<HeroRecursive>("HeroRecursive", "heroType");
 
 ```js
 // Using Primitive Values. Currently support is for string, number and boolean
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
     primitiveValues: {
         "string[]": ["TEST"],
         "string": "TEST",
@@ -255,7 +254,7 @@ console.log("::Primitive Values::", data);
 
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
     includeAllProps: true,
     primitiveValues: {
         "string[]": ["TEST"]

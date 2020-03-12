@@ -1,6 +1,7 @@
 import * as faker from "faker";
+
 import { Generator } from "../generator";
-import { HeroRecursive, HeroType, Hero } from "./test.model";
+import {Hero, HeroRecursive, HeroType } from "./test.model";
 
 let generator: Generator;
 
@@ -13,29 +14,28 @@ beforeEach(() => {
 });
 
 test("Configuration Fallback", () => {
+	generator.removeAll();
 	generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 	generator.add<HeroRecursive>("HeroRecursive", "heroType", HeroType.Rock);
 
-	const data = generator.generate<HeroRecursive>("test.model.ts", "HeroRecursive", {
+	const data = generator.generate<HeroRecursive>("HeroRecursive", {
 		includeAllProps: true,
 		primitiveValues: {
 			"string[]": ["TEST"]
 		}
-	})
+	});
 
 	generator.remove<HeroRecursive>("HeroRecursive", "name");
 	generator.remove<HeroRecursive>("HeroRecursive", "heroType");
 
 	expect(data.heroType).toEqual(HeroType.Rock);
-	expect(data.alt).toEqual("MOCK");
 	expect(data.codes).toEqual(["TEST"]);
 	expect(data.name).toBeDefined();
 	expect(data.name).not.toEqual("MOCK")
-	expect(data.heros).toBeDefined();
 });
 
 test("HeroRecursive", () => {
-	const data = generator.generate("test.model.ts", "HeroRecursive");
+	const data = generator.generate("HeroRecursive");
 	expect(data).not.toBeUndefined();
 	const expectedData = {
 		"heros": [{
@@ -49,7 +49,7 @@ test("HeroRecursive", () => {
 });
 
 test("HeroRecursive { maxRecursiveLoop: 2}", () => {
-	const data = generator.generate("test.model.ts", "HeroRecursive", { maxRecursiveLoop: 2 });
+	const data = generator.generate("HeroRecursive", { maxRecursiveLoop: 2 });
 	expect(data).not.toBeUndefined();
 	const expectedData = {
 		"heros": [
@@ -72,7 +72,7 @@ test("HeroRecursive { maxRecursiveLoop: 2}", () => {
 });
 
 test("Hero {includeAllProps = false}", () => {
-	const data = generator.generate("test.model.ts", "Hero");
+	const data = generator.generate("Hero");
 	expect(data).not.toBeUndefined();
 	const expected = {
 		sortOrder: -1,
@@ -83,7 +83,7 @@ test("Hero {includeAllProps = false}", () => {
 });
 
 test("Hero {includeAllProps = true}", () => {
-	const data = generator.generate<Hero>("test.model.ts", "Hero", { includeAllProps: true });
+	const data = generator.generate<Hero>("Hero", { includeAllProps: true });
 	expect(data).not.toBeUndefined();
 	const expected = {
 		"id": -1,
@@ -97,7 +97,7 @@ test("Hero {includeAllProps = true}", () => {
 });
 
 test("HeroTypesMenu", () => {
-	const data = generator.generate("test.model.ts", "HeroTypesMenu", { includeAllProps: false });
+	const data = generator.generate("HeroTypesMenu", { includeAllProps: false });
 	expect(data).not.toBeUndefined();
 	const expected = {
 		"heroTypes": [{
@@ -119,7 +119,9 @@ test("HeroTypesMenu", () => {
 });
 
 test("Bricks", () => {
-	const data = generator.generate("test.model.ts", "Bricks");
+	const code_data = faker.lorem.word();
+	generator.add("BricksDetails", "code", code_data);
+	const data = generator.generate("Bricks");
 	expect(data).not.toBeUndefined();
 	const expected = {
 		material:
@@ -134,7 +136,7 @@ test("Bricks", () => {
 		details: [
 			{
 				concreteClass: "C5",
-				code: 'MOCK',
+				code: code_data,
 				alternatives: [
 					{
 						name: "MOCK",
@@ -149,8 +151,9 @@ test("Bricks", () => {
 });
 
 test("Bricks with custom data", () => {
-
-	const data = generator.generate("test.model.ts", "Bricks", {
+	
+	generator.removeAll();
+	const data = generator.generate("Bricks", {
 		primitiveValues: {
 			"string[]": ["TEST"],
 			"string": "TEST",
@@ -189,7 +192,7 @@ test("Bricks with custom data", () => {
 
 test("Hero with custom fieldValues", () => {
 	generator.add("Hero", "name", faker.name.findName());
-	const data = generator.generate<Hero>("test.model.ts", "Hero", { includeAllProps: true });
+	const data = generator.generate<Hero>("Hero", { includeAllProps: true });
 
 	expect(data).not.toBeUndefined();
 

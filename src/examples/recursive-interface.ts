@@ -1,13 +1,8 @@
-import faker = require('faker');
-import { Generator } from '../generator';
+import * as faker from "faker";
+import { IMinimatch } from "minimatch";
 
-export interface HeroRecursive {
-	name: string;
-	altName: string;
-	codes: string[];
-	heroType: HeroType;
-	hero?: HeroRecursive;
-}
+import { Generator } from '../generator';
+import { HeroRecursive } from "../tests/test.model";
 
 export enum HeroType {
 	Fire,
@@ -16,14 +11,20 @@ export enum HeroType {
 	Rock
 }
 
+export interface TestMatch extends IMinimatch {
+	test: string;
+}
+
 const generator = new Generator("tsconfig.json");
-let data = generator.generate<HeroRecursive>("recursive-interface.ts", "HeroRecursive");
+let data = generator.generate<HeroRecursive>("HeroRecursive");
 
 console.log("::Default::", data);
 
-// OUTPUT >> ::Default:: { hero: { name: 'MOCK', altName: 'MOCK', codes: [ 'MOCK' ] } }
 
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("IMinimatch", { includeAllProps: true });
+console.log("::IMinimatch::", data);
+
+data = generator.generate("HeroRecursive", {
 	includeAllProps: true
 });
 
@@ -43,7 +44,7 @@ console.log("::IncludeAllProps::", data);
 // 	}
 // }
 
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
 	includeAllProps: true,
 	maxRecursiveLoop: 2
 })
@@ -75,7 +76,7 @@ console.log("::Max Recursion = 2::", data);
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 generator.add<HeroRecursive>("HeroRecursive", "heroType", HeroType.Rock);
 
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
 	includeAllProps: true
 })
 
@@ -101,7 +102,7 @@ generator.remove<HeroRecursive>("HeroRecursive", "heroType");
 
 
 // Using Primitive Values. Currently support is for string, number and boolean
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
 	primitiveValues: {
 		"string[]": ["TEST"],
 		"string": "TEST",
@@ -128,7 +129,7 @@ console.log("::Primitive Values::", data);
 
 generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 
-data = generator.generate("recursive-interface.ts", "HeroRecursive", {
+data = generator.generate("HeroRecursive", {
 	includeAllProps: true,
 	primitiveValues: {
 		"string[]": ["TEST"]
@@ -151,4 +152,3 @@ generator.remove<HeroRecursive>("HeroRecursive", "name");
 //      heroType: 'Fire'
 // 	} 
 // }
-

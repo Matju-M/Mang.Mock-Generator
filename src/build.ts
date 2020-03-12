@@ -158,6 +158,10 @@ function getInterface(sourceFiles: SourceFile[], exp: ExpressionWithTypeArgument
 function getInterfaceByName(sourceFiles: SourceFile[], name: string): InterfaceDeclaration | undefined {
 	const extendedDeclaration = head(compact(sourceFiles.map(x => {
 		if (x.isInNodeModules()) {
+			const interfaceFound = x.getInterface(name);
+			if(interfaceFound) {
+				return interfaceFound;
+			}
 			return head(compact(x.getNamespaces().map(x => x.getInterface(name))));
 		} else {
 			return x.getInterface(name);

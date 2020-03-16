@@ -1,7 +1,7 @@
 import * as faker from "faker";
 
 import { Generator } from "../generator";
-import {Hero, HeroRecursive, HeroType } from "./test.model";
+import {Hero, HeroRecursive, HeroType, Bricks } from "./test.model";
 
 let generator: Generator;
 
@@ -201,7 +201,7 @@ test("Hero with custom fieldValues", () => {
 	expect(data.name).not.toEqual("MOCK");
 });
 
-test("Hero with custom fieldValues as null", () => {
+test("Hero with custom fieldValues as null (primitive value)", () => {
 	generator.add("Hero", "name", null);
 	const data = generator.generate<Hero>("Hero", { includeAllProps: true });
 
@@ -209,4 +209,20 @@ test("Hero with custom fieldValues as null", () => {
 
 	expect(data.code).toEqual("MOCK");
 	expect(data.name).toBeNull();
+});
+
+test("Hero with custom fieldValues as null (array)", () => {
+	generator.add<Bricks>("Bricks", "details", null);
+	const data = generator.generate<Bricks>("Bricks", { includeAllProps: true });
+
+	expect(data).not.toBeUndefined();
+	expect(data.details).toBeNull();
+});
+
+test("Hero with custom fieldValues as null (object)", () => {
+	generator.add<Bricks>("Bricks", "material", null);
+	const data = generator.generate<Bricks>("Bricks", { includeAllProps: true });
+
+	expect(data).not.toBeUndefined();
+	expect(data.material).toBeNull();
 });

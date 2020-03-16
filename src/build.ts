@@ -91,16 +91,21 @@ function builder<T>(
 			}
 		} else if (propType.isObject() && !isPrimitive) {
 			const tempSkeleton = {};
-			builder(
-				sanitizedPropType,
-				sourceFiles,
-				tempSkeleton,
-				config,
-				recursions,
-				includeAllChildren || hasOptionalParent
-			);
-			if (!isEmpty(tempSkeleton)) {
-				skeleton[prop.getName()] = tempSkeleton;
+			const fieldValue = getFieldValue(config.fieldValues, interfaceName, prop.getName());
+			if (fieldValue || isNull(fieldValue)) {
+				skeleton[prop.getName()] = fieldValue;
+			} else {
+				builder(
+					sanitizedPropType,
+					sourceFiles,
+					tempSkeleton,
+					config,
+					recursions,
+					includeAllChildren || hasOptionalParent
+				);
+				if (!isEmpty(tempSkeleton)) {
+					skeleton[prop.getName()] = tempSkeleton;
+				}
 			}
 		} else if (addProp || hasOptionalParent) {
 			skeleton[prop.getName()] = getValue(prop.getName(), propType, sanitizedInterfaceName, config);

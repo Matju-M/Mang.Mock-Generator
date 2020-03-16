@@ -200,3 +200,13 @@ test("Hero with custom fieldValues", () => {
 	expect(data.name).toBeDefined();
 	expect(data.name).not.toEqual("MOCK");
 });
+
+test("Hero with custom fieldValues as null", () => {
+	generator.add("Hero", "name", null);
+	const data = generator.generate<Hero>("Hero", { includeAllProps: true });
+
+	expect(data).not.toBeUndefined();
+
+	expect(data.code).toEqual("MOCK");
+	expect(data.name).toBeNull();
+});

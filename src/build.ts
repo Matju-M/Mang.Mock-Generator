@@ -1,5 +1,19 @@
-import { forEach, isEmpty, Dictionary, head, map, compact } from "lodash";
-import { SourceFile, ExpressionWithTypeArguments, Type, InterfaceDeclaration, PropertySignature } from "ts-morph";
+import {
+	forEach,
+	isEmpty,
+	Dictionary,
+	head,
+	map,
+	compact,
+	isNull
+} from "lodash";
+import {
+	SourceFile,
+	ExpressionWithTypeArguments,
+	Type,
+	InterfaceDeclaration,
+	PropertySignature
+} from "ts-morph";
 
 import { Configuration, PRIMITIVE_TYPES } from './generator.config';
 
@@ -57,7 +71,7 @@ function builder<T>(
 				const fieldValue = getFieldValue(config.fieldValues, interfaceName, prop.getName());
 				const enumMember = enumInterface.getMembers()[0]; // Get First Member;
 
-				skeleton[prop.getName()] = fieldValue ? fieldValue : enumMember.getText();
+				skeleton[prop.getName()] = fieldValue || isNull(fieldValue) ? fieldValue : enumMember.getText();
 			} else {
 				console.error(`[ERROR]: Enum Interface ${propType.getText()} not found!`);
 			}
@@ -105,7 +119,11 @@ function isPrimitiveType(type: Type): boolean {
 }
 
 function getValue(key: string, type: Type, interfaceName: string, config: Required<Configuration>, ): any {
-	return getFieldValue(config.fieldValues, interfaceName, key) || getPrimitiveDefaultValue(type, config.primitiveValues)
+	const fieldValue = getFieldValue(config.fieldValues, interfaceName, key);
+	if (fieldValue || isNull(fieldValue)) {
+		return fieldValue;
+	}
+	return getPrimitiveDefaultValue(type, config.primitiveValues)
 }
 
 function getPrimitiveDefaultValue(type: Type, primitiveValues: Dictionary<any>): any {
@@ -159,7 +177,7 @@ function getInterfaceByName(sourceFiles: SourceFile[], name: string): InterfaceD
 	const extendedDeclaration = head(compact(sourceFiles.map(x => {
 		if (x.isInNodeModules()) {
 			const interfaceFound = x.getInterface(name);
-			if(interfaceFound) {
+			if (interfaceFound) {
 				return interfaceFound;
 			}
 			return head(compact(x.getNamespaces().map(x => x.getInterface(name))));

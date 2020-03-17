@@ -4,6 +4,8 @@ import { Dictionary, merge } from 'lodash';
 import { build } from "./build";
 import { DEFAULT_CONFIGURATION, Configuration } from './generator.config';
 
+type ValueOf<T> = T[keyof T];
+
 export class Generator {
 
 	project: Project;
@@ -27,7 +29,7 @@ export class Generator {
 		this.fieldValues[key] = undefined;
 	}
 
-	add<T>(interfaceName: string, propertyKey: keyof T, propertyValue: any) {
+	add<T>(interfaceName: string, propertyKey: keyof T, propertyValue: ValueOf<T> | null) {
 
 		const value = {
 			[`${interfaceName}-${propertyKey}`]: propertyValue

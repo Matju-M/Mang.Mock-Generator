@@ -1,6 +1,6 @@
 {
   "name": "@mangm/ts-mock-generator",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Mock Generator from Typescript Interfaces",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

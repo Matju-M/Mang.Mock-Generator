@@ -17,6 +17,7 @@ test("Configuration Fallback", () => {
 	generator.removeAll();
 	generator.add<HeroRecursive>("HeroRecursive", "name", faker.name.findName());
 	generator.add<HeroRecursive>("HeroRecursive", "heroType", HeroType.Rock);
+	generator.add<HeroRecursive>("HeroRecursive", "isActive", false);
 
 	const data = generator.generate<HeroRecursive>("HeroRecursive", {
 		includeAllProps: true,
@@ -27,11 +28,13 @@ test("Configuration Fallback", () => {
 
 	generator.remove<HeroRecursive>("HeroRecursive", "name");
 	generator.remove<HeroRecursive>("HeroRecursive", "heroType");
-
+	generator.remove<HeroRecursive>("HeroRecursive", "isActive");
+	
 	expect(data.heroType).toEqual(HeroType.Rock);
 	expect(data.codes).toEqual(["TEST"]);
 	expect(data.name).toBeDefined();
 	expect(data.name).not.toEqual("MOCK")
+	expect(data.isActive).toEqual(false);
 });
 
 test("HeroRecursive", () => {
@@ -42,7 +45,8 @@ test("HeroRecursive", () => {
 			"alt": "MOCK",
 			"codes": ["MOCK"],
 			"name": "MOCK",
-			"heroType": "Fire"
+			"heroType": "Fire",
+			"isActive": true
 		}]
 	};
 	expect(data).toEqual(expectedData);
@@ -57,12 +61,14 @@ test("HeroRecursive { maxRecursiveLoop: 2}", () => {
 				"alt": "MOCK",
 				"codes": ["MOCK"],
 				"heroType": "Fire",
+				"isActive": true,
 				"heros": [
 					{
 						"alt": "MOCK",
 						"codes": ["MOCK"],
 						"name": "MOCK",
-						"heroType": "Fire"
+						"heroType": "Fire",
+						"isActive": true,
 					}
 				], "name": "MOCK"
 			}

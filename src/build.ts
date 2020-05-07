@@ -62,7 +62,7 @@ function builder<T>(
 			}
 		}
 		const fieldValue = getFieldValue(config.fieldValues, interfaceName, prop.getName());
-		if (fieldValue || isNull(fieldValue)) {
+		if (fieldValue !== undefined) {
 			skeleton[prop.getName()] = fieldValue;
 		}
 		else if (propType.isEnum() && (addProp || hasOptionalParent)) {

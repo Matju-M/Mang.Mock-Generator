@@ -77,6 +77,7 @@ export interface HeroRecursive {
 	heroType: HeroType,
 	heros?: HeroRecursive[],
 	name: string;
+	isActive: boolean;
 }
 
 export enum HeroType {

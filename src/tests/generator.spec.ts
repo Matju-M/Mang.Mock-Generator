@@ -33,7 +33,7 @@ test("Configuration Fallback", () => {
 	expect(data.heroType).toEqual(HeroType.Rock);
 	expect(data.codes).toEqual(["TEST"]);
 	expect(data.name).toBeDefined();
-	expect(data.name).not.toEqual("MOCK")
+	expect(data.name).not.toEqual("MOCK");
 	expect(data.isActive).toEqual(false);
 });
 

@@ -123,10 +123,10 @@ function isPrimitiveType(type: Type): boolean {
 
 function getValue(key: string, type: Type, interfaceName: string, config: Required<Configuration>, ): any {
 	const fieldValue = getFieldValue(config.fieldValues, interfaceName, key);
-	if (fieldValue || isNull(fieldValue)) {
+	if (fieldValue !== undefined) {
 		return fieldValue;
 	}
-	return getPrimitiveDefaultValue(type, config.primitiveValues)
+	return getPrimitiveDefaultValue(type, config.primitiveValues);
 }
 
 function getPrimitiveDefaultValue(type: Type, primitiveValues: Dictionary<any>): any {

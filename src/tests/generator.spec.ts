@@ -1,7 +1,7 @@
 import * as faker from "faker";
 
 import { Generator } from "../generator";
-import {Hero, HeroRecursive, HeroType, Bricks } from "./test.model";
+import { Hero, HeroRecursive, HeroType, Bricks } from "./test.model";
 
 let generator: Generator;
 
@@ -29,7 +29,7 @@ test("Configuration Fallback", () => {
 	generator.remove<HeroRecursive>("HeroRecursive", "name");
 	generator.remove<HeroRecursive>("HeroRecursive", "heroType");
 	generator.remove<HeroRecursive>("HeroRecursive", "isActive");
-	
+
 	expect(data.heroType).toEqual(HeroType.Rock);
 	expect(data.codes).toEqual(["TEST"]);
 	expect(data.name).toBeDefined();
@@ -157,7 +157,7 @@ test("Bricks", () => {
 });
 
 test("Bricks with custom data", () => {
-	
+
 	generator.removeAll();
 	const data = generator.generate("Bricks", {
 		primitiveValues: {

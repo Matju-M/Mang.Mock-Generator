@@ -37,10 +37,24 @@ export class Generator {
 	};
 
 	/**
-	 * 
+	 *
 	 * @param sourceFileName Source file name ex: test.model.ts
 	 * @param interfaceName Interface name ex: Hero
 	 * @param config Configuration
+	 * @returns Partial<T>
+	 */
+	generateAndRemoveAll<T>(interfaceName: string, config?: Configuration): Partial<T> {
+		const data = this.generate<T>(interfaceName, config);
+		this.removeAll();
+		return data;
+	}
+
+	/**
+	 *
+	 * @param sourceFileName Source file name ex: test.model.ts
+	 * @param interfaceName Interface name ex: Hero
+	 * @param config Configuration
+	 * @returns Partial<T>
 	 */
 	generate<T>(interfaceName: string, config?: Configuration): Partial<T> {
 

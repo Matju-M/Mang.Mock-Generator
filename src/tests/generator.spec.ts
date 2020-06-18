@@ -2,6 +2,7 @@ import * as faker from "faker";
 
 import { Generator } from "../generator";
 import { Hero, HeroRecursive, HeroType, Bricks } from "./test.model";
+import { TestMatch } from "../examples/recursive-interface";
 
 let generator: Generator;
 
@@ -231,4 +232,13 @@ test("Hero with custom fieldValues as null (object)", () => {
 
 	expect(data).not.toBeUndefined();
 	expect(data.material).toBeNull();
+});
+
+test("External Deps", () => {
+
+	const data = generator.generate<TestMatch>("IMinimatch", { includeAllProps: true });
+
+	expect(data).toBeDefined();
+	expect(data.pattern).toBeDefined();
+
 });

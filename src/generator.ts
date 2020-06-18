@@ -14,6 +14,21 @@ export class Generator {
 			tsConfigFilePath
 		});
 
+		const retrieveConfig = ts.sys.readFile(tsConfigFilePath);
+		const parsed = ts.parseConfigFileTextToJson(tsConfigFilePath, retrieveConfig || "{}");
+		const paths: Record<string, string[]> = parsed?.config?.compilerOptions?.paths;
+
+		if (paths) {
+			const keys = Object.keys(paths);
+			keys.forEach(k => {
+				const sanitization = (paths[k][0] || "").replace(/((\/?\*)|\/|\$1)$/, "");
+				this.project.addSourceFilesAtPaths(sanitization + "/**/*.d.ts");
+			});
+		}
+		
+		this.project.addSourceFilesAtPaths("node_modules/**/*.d.ts");
+		this.project.resolveSourceFileDependencies();
+
 		this.fieldValues = {};
 		console.log("Initialized with ts version", ts.version);
 	}
@@ -65,7 +80,6 @@ export class Generator {
 			config
 		);
 
-		this.project.addSourceFilesAtPaths("node_modules/**/*.d.ts");
 		const files = this.project.getSourceFiles();
 		let props = {};
 

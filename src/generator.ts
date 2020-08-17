@@ -77,7 +77,6 @@ export class Generator {
 			config.fieldValues = mapKeys(config.fieldValues, (_, key) => {
 				return `${interfaceName}-${key}`;
 			});
-			console.log("::>> config", config.fieldValues);
 		}
 
 		const configuration = merge(

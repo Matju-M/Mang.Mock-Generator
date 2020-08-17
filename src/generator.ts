@@ -1,5 +1,5 @@
 import { Project, ts } from "ts-morph";
-import { Dictionary, merge } from 'lodash';
+import { Dictionary, merge, mapKeys } from 'lodash';
 
 import { build } from "./build";
 import { DEFAULT_CONFIGURATION, Configuration } from './generator.config';
@@ -25,7 +25,7 @@ export class Generator {
 				this.project.addSourceFilesAtPaths(sanitization + "/**/*.d.ts");
 			});
 		}
-		
+
 		this.project.addSourceFilesAtPaths("node_modules/**/*.d.ts");
 		this.project.resolveSourceFileDependencies();
 
@@ -72,6 +72,13 @@ export class Generator {
 	 * @returns Partial<T>
 	 */
 	generate<T>(interfaceName: string, config?: Configuration): Partial<T> {
+
+		if (config?.fieldValues) {
+			config.fieldValues = mapKeys(config.fieldValues, (_, key) => {
+				return `${interfaceName}-${key}`;
+			});
+			console.log("::>> config", config.fieldValues);
+		}
 
 		const configuration = merge(
 			{},

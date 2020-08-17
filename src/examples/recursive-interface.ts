@@ -20,7 +20,9 @@ let data = generator.generate<HeroRecursive>("HeroRecursive");
 
 console.log("::Default::", data);
 
-const testMatch = generator.generate<TestMatch>("IMinimatch", { includeAllProps: true });
+const testMatch = generator.generate<TestMatch>("IMinimatch", { 
+	includeAllProps: true
+});
 console.log("::IMinimatch::", testMatch);
 
 data = generator.generate<HeroRecursive>("HeroRecursive", {

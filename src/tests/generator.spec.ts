@@ -236,7 +236,9 @@ test("Hero with custom fieldValues as null (object)", () => {
 
 test("External Deps", () => {
 
-	const data = generator.generate<TestMatch>("IMinimatch", { includeAllProps: true });
+	const data = generator.generate<TestMatch>("IMinimatch", {
+		includeAllProps: true
+	});
 
 	expect(data).toBeDefined();
 	expect(data.pattern).toBeDefined();
